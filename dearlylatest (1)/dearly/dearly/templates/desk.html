@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% from "_letter_card.html" import letter_card %}
+{% block title %}Writing Desk — Dearly{% endblock %}
+{% block bodyclass %}desk-body{% endblock %}
+
+{% block content %}
+<header class="desk-header">
+  <div>
+    <p class="eyebrow">Good to see you, {{ me['username'] }}</p>
+    <h1 class="page-title">Your Writing Desk</h1>
+  </div>
+  <div class="desk-header__badges">
+    {% if unread_count %}
+      <a href="{{ url_for('mailbox') }}" class="badge badge-mail">
+        <svg class="badge-icon" viewBox="0 0 24 24" width="16" height="16">
+          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+        </svg>
+        <span>{{ unread_count }} unread</span>
+      </a>
+    {% endif %}
+    {% if pending_requests %}
+      <a href="{{ url_for('penpals') }}" class="badge badge-penpal">
+        <svg class="badge-icon" viewBox="0 0 24 24" width="16" height="16">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <span>{{ pending_requests }} request{{ 's' if pending_requests != 1 }}</span>
+      </a>
+    {% endif %}
+  </div>
+</header>
+
+<div class="desk-grid-main">
+  <!-- Desk Interactive Items Panel -->
+  <div class="desk-workspace-card">
+    <h2 class="workspace-sec-title">Desk Actions</h2>
+    <div class="desk-interactive-grid">
+      
+      <!-- Notebook Card: Start a Journal -->
+      <a href="{{ url_for('new_journal') }}" class="desk-item-card item-notebook">
+        <div class="card-icon-wrap">📓</div>
+        <h3>Start a Journal</h3>
+        <p class="card-desc">Write a quiet page about your day.</p>
+      </a>
+
+      <!-- Polaroid Card: Upload a Photo -->
+      <div class="desk-item-card item-photo">
+        <div class="card-icon-wrap">📷</div>
+        <h3>Upload a Photo</h3>
+        <p class="card-desc mb-8">Pin a photo memory to your desk.</p>
+        
+        <form action="{{ url_for('upload_memory') }}" method="POST" enctype="multipart/form-data" class="mini-upload-form">
+          <label class="custom-file-upload">
+            <input type="file" name="photo" accept="image/*" required onchange="this.form.submit()">
+            <span>Choose photo</span>
+          </label>
+        </form>
+      </div>
+
+      <!-- Voice Card: Voice to Letter -->
+      <a href="{{ url_for('send_letter') }}?voice=1" class="desk-item-card item-quill">
+        <div class="card-icon-wrap">🎤</div>
+        <h3>Voice to Letter</h3>
+        <p class="card-desc">Speak aloud and see your words turned to ink.</p>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Sidebar: Pen Pals Circle (decorated with flowers) -->
+  <div class="desk-sidebar-penpals">
+    <div class="sidebar-flowers-top">✿ ❀ ✿ ❀</div>
+    <h2 class="workspace-sec-title">Pen Pal Circle</h2>
+    
+    {% if penpals %}
+      <div class="sidebar-penpal-list">
+        {% for p in penpals %}
+          <a href="{{ url_for('profile', username=p['username']) }}" class="sidebar-penpal-row" title="Visit {{ p['username'] }}'s profile">
+            <span class="penpal-avatar-small">{{ p['username'][:2].upper() }}</span>
+            <span class="penpal-name-small">{{ p['username'] }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-sidebar-msg">No pen pals at the desk yet. Send some requests in the Pen Pals room!</p>
+    {% endif %}
+    
+    <div style="margin-top: 16px;">
+      <a href="{{ url_for('penpals') }}" class="btn btn-outline btn-small btn-block">Find Pen Pals</a>
+    </div>
+  </div>
+</div>
+
+<!-- Section: Uploaded Memories Grid -->
+{% if memories %}
+<section class="desk-section">
+  <h2 class="workspace-sec-title">Pinned Memories</h2>
+  <div class="polaroid-scatter-grid">
+    {% for mem in memories %}
+      <a href="{{ url_for('view_memory', memory_id=mem['id']) }}" class="desk-polaroid-item">
+        <div class="desk-polaroid-frame">
+          <img src="{{ url_for('static', filename=mem['image_path']) }}" class="desk-polaroid-img" alt="Memory">
+          <div class="desk-polaroid-label">
+            <span class="polaroid-date">{{ mem['created_at'][:10] }}</span>
+            {% if mem['is_blurry'] %}
+              <span class="polaroid-blur-tag" title="Image is blurry">⚠️ blur</span>
+            {% endif %}
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Section: Journal Entries scattered on the desk -->
+<section class="desk-section" style="margin-top: 36px;">
+  <h2 class="workspace-sec-title">Scatter Sheets</h2>
+  {% if journals %}
+    <div class="paper-scatter">
+      {% for j in journals %}
+        {{ letter_card(j) }}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-desk">
+      <p>The desk is bare for now. Write your first page, or visit the Reading Room to see what others have shared.</p>
+      <a href="{{ url_for('new_journal') }}" class="btn btn-ink">Write your first page</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

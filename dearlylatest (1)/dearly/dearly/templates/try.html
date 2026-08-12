@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Desk — Dearly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --gold-dark: #8c6d37;
+      --gold-light: #e6cb85;
+      --gold-mid: #b89752;
+      --text-color: #2b1d0c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #110d0a;
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    /* Desk Container with generated image background */
+    .desk-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      aspect-ratio: 16 / 9;
+      background: url('https://lh3.googleusercontent.com/d/1gK84XN-M4Z3dY9N-A_y2pS5O-3L83K8m') no-repeat center center;
+      background-size: contain;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      border-radius: 8px;
+    }
+
+    /* Diary Page Inner Container */
+    .diary-content {
+      position: absolute;
+      top: 8%;
+      left: 14%;
+      width: 72%;
+      height: 70%;
+      display: flex;
+      justify-content: space-between;
+      padding: 2rem;
+    }
+
+    .diary-page {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 30px;
+      text-decoration: none;
+      color: var(--text-color);
+      transition: transform 0.2s ease;
+    }
+
+    .diary-page:hover {
+      transform: translateY(-3px);
+    }
+
+    .page-title {
+      font-family: 'Alex Brush', cursive;
+      font-size: 2.8rem;
+      font-weight: 500;
+      color: #382413;
+      text-shadow: 0.5px 0.5px 0px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flower-icon {
+      font-size: 1.5rem;
+    }
+
+    /* Vintage Brass Bar Overlay */
+    .brass-bar {
+      position: absolute;
+      bottom: 4%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 82%;
+      height: 48px;
+      background: linear-gradient(180deg, #d8b86d 0%, #a27a33 50%, #704f1a 100%);
+      border: 2px solid #523810;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      color: #261605;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .brass-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(0, 0, 0, 0.3);
+      box-shadow: 1px 0 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .badge-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: #261605;
+    }
+
+    .badge-item:hover {
+      text-decoration: underline;
+    }
+
+    .flourish {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .page-title { font-size: 1.8rem; }
+      .brass-bar { font-size: 0.65rem; padding: 0 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="desk-wrapper">
+    <!-- Overlay for Interactive Diary Sections -->
+    <div class="diary-content">
+      <!-- Left Page: Start a Journal -->
+      <a href="/new_journal" class="diary-page">
+        <h2 class="page-title">Start a Journal <span class="flower-icon">❀</span></h2>
+      </a>
+
+      <!-- Right Page: My Private Diary -->
+      <a href="/private_diary" class="diary-page">
+        <h2 class="page-title">My Private Diary <span class="flower-icon">❀</span></h2>
+      </a>
+    </div>
+
+    <!-- Bottom Brass Bar Navigation -->
+    <div class="brass-bar">
+      <div class="brass-section">
+        <span>WELCOME, {{ me['username'] if me else 'Emma' }}</span>
+        <span>☼</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="brass-section">
+        <span>Badges:</span>
+        <a href="/mailbox" class="badge-item">1 Mail 📫</a>
+        <a href="/penpals" class="badge-item">2 Penpals 📬</a>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="brass-section">
+        <span>Page Title: <i>Writing Desk — Dearly</i></span>
+        <span class="flourish">✒ ❀ ✿ ❀ ✒</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
