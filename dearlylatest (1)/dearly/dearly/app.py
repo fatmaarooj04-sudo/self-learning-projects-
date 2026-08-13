@@ -41,8 +41,6 @@ def login_required(view):
         if "user_id" not in session:
             flash("Please sign in to open your writing desk.", "info")
             return redirect(url_for("login"))
-        # Guard against a stale session cookie pointing at a user_id that
-        # no longer exists in the database (e.g. the db was reset/replaced).
         if current_user() is None:
             session.clear()
             flash("Your session has expired. Please sign in again.", "info")
