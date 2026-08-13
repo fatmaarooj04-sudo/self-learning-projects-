@@ -25,8 +25,6 @@ def current_user():
         conn.close()
         return user
     except sqlite3.OperationalError:
-        # The database file is missing/empty/out of sync with the schema
-        # (e.g. it was deleted or replaced). Make sure it exists and retry once.
         db.init_db()
         try:
             conn = db.get_db()
