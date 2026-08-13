@@ -168,7 +168,6 @@ def desk():
         (me["id"],),
     ).fetchone()["c"]
 
-    # Fetch accepted penpals to show on the desk
     penpals = conn.execute(
         """SELECT users.* FROM penpal_requests
            JOIN users ON users.id = CASE
