@@ -1,6 +1,4 @@
-/*
- * Dearly — front-end behaviour.
- * Speech features use the browser's built-in Web Speech API, so no
+
  
 
 const DearlySpeech = (function () {
