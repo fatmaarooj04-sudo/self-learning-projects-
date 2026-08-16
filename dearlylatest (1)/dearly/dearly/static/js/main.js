@@ -193,7 +193,7 @@ if (liyaah) {
         bubble.textContent = line;
     }
 
-    // Zoom in spotlight when user clicks her
+
     liyaah.classList.add("liyaah-spotlight");
     DearlySpeech.speak(line, 1);
   });
