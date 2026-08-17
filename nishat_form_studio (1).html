@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nishat Form Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#0B3A82;
+    --secondary:#1557A6;
+    --accent:#2F80ED;
+    --light-blue:#EAF3FF;
+    --bg:#F7F9FC;
+    --surface:#FFFFFF;
+    --text:#172033;
+    --muted:#667085;
+    --success:#16845B;
+    --warning:#D98E04;
+    --error:#D92D20;
+    --border:#E4E7EC;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);}
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+  .display-font{font-family:'Sora','Inter',system-ui,sans-serif;}
+
+  .app{display:flex;min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{
+    width:240px;background:var(--primary);color:#fff;flex-shrink:0;
+    display:flex;flex-direction:column;padding:20px 14px;
+    position:sticky;top:0;height:100vh;
+  }
+  .brand{display:flex;align-items:center;gap:12px;padding:8px 8px 24px;
+    border-bottom:1px solid rgba(255,255,255,.14);margin-bottom:16px;}
+  .brand-mark{
+    width:44px;height:44px;border-radius:11px;flex-shrink:0;
+    background:linear-gradient(155deg,var(--accent) 0%,#1E5FC9 55%,var(--primary) 100%);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;
+    box-shadow:0 4px 14px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.25);
+    font-family:'Sora',sans-serif;letter-spacing:-.02em;
+  }
+  .brand-text .t1{font-family:'Sora',sans-serif;font-weight:700;font-size:15.5px;letter-spacing:-.01em;line-height:1.15;}
+  .brand-text .t2{font-size:10px;color:#A9C2EA;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+  .nav{display:flex;flex-direction:column;gap:2px;margin-top:8px;}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;
+    color:#CFE0F7;font-size:13.5px;font-weight:500;cursor:pointer;border:none;background:transparent;
+    text-align:left;width:100%;transition:background .12s ease, color .12s ease;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .nav-item.active{background:#fff;color:var(--primary);font-weight:700;}
+  .nav-icon{width:16px;text-align:center;font-size:14px;}
+  .sidebar-footer{margin-top:auto;padding:10px 8px;font-size:11px;color:#7FA1D6;border-top:1px solid rgba(255,255,255,.12);padding-top:14px;}
+
+  /* MAIN */
+  .main{flex:1;min-width:0;}
+  .topbar{
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    padding:22px 32px 20px;
+    position:sticky;top:0;z-index:5;
+    box-shadow:0 1px 0 rgba(11,58,130,.03);
+  }
+  .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .topbar-left{display:flex;align-items:center;gap:16px;min-width:0;}
+  .topbar-icon{
+    width:46px;height:46px;border-radius:12px;flex-shrink:0;
+    background:var(--light-blue);color:var(--primary);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+  }
+  .breadcrumb{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 4px;}
+  .topbar h1{
+    font-family:'Sora',sans-serif;font-weight:700;letter-spacing:-.015em;
+    font-size:30px;margin:0;color:var(--primary);line-height:1.15;
+  }
+  .topbar .sub{font-size:13px;color:var(--muted);margin-top:5px;}
+  .topbar-accent{height:3px;border-radius:99px;margin-top:18px;
+    background:linear-gradient(90deg,var(--primary) 0%,var(--accent) 45%,var(--light-blue) 100%);}
+  .content{padding:28px 32px 40px;max-width:1180px;}
+
+  /* GENERIC */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;}
+  .grid{display:grid;gap:16px;}
+  .grid-4{grid-template-columns:repeat(4,1fr);}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  .stat-value{font-family:'Sora',sans-serif;font-size:28px;font-weight:700;color:var(--primary);}
+  .stat-label{font-size:12px;color:var(--muted);margin-top:2px;}
+  .section-title{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin:0 0 10px;}
+  .card h2, .card h3, .layout-preview h3{font-family:'Sora',sans-serif;font-weight:700;letter-spacing:-.01em;}
+  .btn{
+    background:var(--primary);color:#fff;border:none;padding:9px 16px;border-radius:7px;
+    font-size:13px;font-weight:600;cursor:pointer;transition:background .12s ease;
+  }
+  .btn:hover{background:var(--secondary);}
+  .btn.secondary{background:var(--light-blue);color:var(--primary);}
+  .btn.secondary:hover{background:#DCEAFB;}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+  .btn.ghost:hover{border-color:var(--primary);color:var(--primary);}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--light-blue);color:var(--primary);}
+  .field-input, select, textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:7px;
+    font-family:inherit;font-size:13.5px;background:#fff;color:var(--text);
+  }
+  .field-input:focus, select:focus, textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
+  label.field-label{display:block;font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:5px;}
+  .field-wrap{margin-bottom:14px;}
+  .required-star{color:var(--error);margin-left:3px;}
+
+  /* DASHBOARD */
+  .tpl-card{border:1px solid var(--border);border-radius:var(--radius);padding:14px;background:#fff;}
+  .tpl-card h4{margin:0 0 4px;font-size:13.5px;}
+  .tpl-card p{margin:0 0 10px;font-size:11.5px;color:var(--muted);}
+
+  /* CREATE FORM */
+  .field-group-title{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px;}
+  .checkbox-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13.5px;}
+  .checkbox-row input{width:15px;height:15px;accent-color:var(--accent);}
+  .custom-field-form{display:flex;gap:8px;margin-top:10px;align-items:flex-end;}
+  .custom-field-form .fw{flex:1;}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--light-blue);color:var(--primary);
+    padding:5px 10px;border-radius:99px;font-size:12px;margin:4px 6px 0 0;font-weight:600;}
+  .chip button{background:none;border:none;color:var(--primary);cursor:pointer;font-weight:800;font-size:13px;line-height:1;}
+
+  /* LAYOUT GALLERY */
+  .layout-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .layout-tab{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;
+    font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted);}
+  .layout-tab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .layout-tab .badge{display:inline-block;margin-left:6px;font-size:10.5px;background:var(--light-blue);color:var(--primary);padding:1px 6px;border-radius:99px;}
+  .layout-tab.active .badge{background:rgba(255,255,255,.25);color:#fff;}
+  .score-box{text-align:center;padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:#fff;}
+  .score-num{font-size:30px;font-weight:800;color:var(--primary);}
+  .score-bar-row{display:flex;align-items:center;gap:8px;font-size:11.5px;margin-top:8px;}
+  .score-bar-track{flex:1;height:6px;background:var(--light-blue);border-radius:99px;overflow:hidden;}
+  .score-bar-fill{height:100%;background:var(--accent);}
+  .loading-line{font-size:12.5px;color:var(--muted);margin:4px 0;}
+  .loading-line.done::before{content:"✓ ";color:var(--success);font-weight:800;}
+
+  .layout-preview{border:1px solid var(--border);border-radius:var(--radius);padding:22px;background:#fff;}
+  .section-block{margin-bottom:18px;}
+  .section-block h5{color:var(--primary);font-size:12px;text-transform:uppercase;letter-spacing:.05em;
+    border-bottom:2px solid var(--light-blue);padding-bottom:6px;margin:0 0 12px;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .step-dots{display:flex;gap:6px;margin-bottom:14px;}
+  .step-dot{width:26px;height:5px;border-radius:99px;background:var(--light-blue);}
+  .step-dot.active{background:var(--accent);}
+  .step-dot.done{background:var(--success);}
+
+  /* EDITOR */
+  .editor-layout{display:grid;grid-template-columns:220px 1fr 260px;gap:16px;}
+  .field-list-item{
+    display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;
+    background:#fff;border:1px solid var(--border);border-radius:7px;cursor:grab;font-size:12.5px;
+  }
+  .field-list-item.dragging{opacity:.4;}
+  .field-list-item.drag-over{border-color:var(--accent);box-shadow:0 0 0 2px var(--light-blue);}
+  .drag-handle{color:var(--muted);cursor:grab;}
+  .field-list-item .fname{flex:1;}
+  .field-list-item button{border:none;background:none;color:var(--error);cursor:pointer;font-size:14px;}
+  .field-list-item.selected{border-color:var(--accent);background:var(--light-blue);}
+
+  .viewport-toggle{display:flex;gap:6px;margin-bottom:14px;}
+  .vp-btn{padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:#fff;
+    font-size:12px;cursor:pointer;color:var(--muted);font-weight:600;}
+  .vp-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .canvas-shell{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;
+    margin:0 auto;transition:max-width .25s ease;}
+
+  /* COMPARE */
+  .compare-col{border:1px solid var(--border);border-radius:var(--radius);padding:14px;background:#fff;}
+
+  /* PREVIEW/EXPORT */
+  .code-block{background:#0F1B33;color:#DCEAFB;padding:16px;border-radius:8px;font-size:12px;
+    overflow-x:auto;white-space:pre;font-family:'IBM Plex Mono',monospace;line-height:1.6;}
+  .export-tabs{display:flex;gap:6px;margin-bottom:10px;}
+
+  .muted{color:var(--muted);}
+  .empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+  .empty-state h3{color:var(--text);margin-bottom:6px;}
+  ::-webkit-scrollbar{width:9px;height:9px;}
+  ::-webkit-scrollbar-thumb{background:#C9D4E3;border-radius:99px;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">NF</div>
+      <div class="brand-text">
+        <div class="t1">Form Studio</div>
+        <div class="t2">Nishat Prototype</div>
+      </div>
+    </div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-footer">Demo prototype · in-memory data only<br>Resets on page reload</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="topbar-left">
+          <div class="topbar-icon" id="pageIcon">◉</div>
+          <div style="min-width:0;">
+            <p class="breadcrumb" id="pageCrumb">Nishat Form Studio</p>
+            <h1 class="display-font" id="pageTitle">Dashboard</h1>
+            <div class="sub" id="pageSub">Design and optimize your enterprise forms</div>
+          </div>
+        </div>
+        <div id="topbarActions"></div>
+      </div>
+      <div class="topbar-accent"></div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<script>
+/* =========================================================
+   STATE
+========================================================= */
+const FIELD_CATALOG = {
+  "Personal": ["Full Name","Employee ID","CNIC","Date of Birth","Gender"],
+  "Work": ["Department","Designation","Joining Date","Employment Type"],
+  "Contact": ["Phone","Email","Address"],
+  "Emergency": ["Emergency Contact"],
+};
+const TYPE_HINTS = {
+  "Full Name":"text","Employee ID":"text","CNIC":"text","Date of Birth":"date","Gender":"select",
+  "Department":"select","Designation":"text","Joining Date":"date","Employment Type":"select",
+  "Phone":"text","Email":"email","Address":"textarea","Emergency Contact":"text"
+};
+const SELECT_OPTIONS = {
+  "Gender":["Male","Female","Other","Prefer not to say"],
+  "Department":["IT","HR","Finance","Production","Administration"],
+  "Employment Type":["Permanent","Contract","Intern"]
+};
+const TEMPLATES = {
+  "Employee Registration": ["Full Name","Employee ID","Department","Designation","Joining Date","Phone","Email","Address"],
+  "IT Equipment Request": ["Full Name","Employee ID","Department","Designation"],
+  "Visitor Registration": ["Full Name","Phone","Address"],
+  "Leave Request": ["Full Name","Employee ID","Department","Joining Date"],
+};
+const LAYOUTS = ["Minimal","Corporate Grid","Sectioned","Multi-Step","Conversational"];
+
+let state = {
+  page: "dashboard",
+  formName: "Employee Registration Form",
+  fields: [ // ordered list of {name, type, required}
+    {name:"Full Name", type:"text", required:true},
+    {name:"Employee ID", type:"text", required:true},
+    {name:"Department", type:"select", required:true},
+    {name:"Joining Date", type:"date", required:false},
+    {name:"Phone", type:"text", required:false},
+    {name:"Email", type:"email", required:false},
+  ],
+  galleryActiveLayout: "Corporate Grid",
+  chosenLayout: null,
+  compareSelection: ["Minimal","Corporate Grid","Sectioned"],
+  wizardStep: 0,
+  viewport: "desktop",
+  editorSelectedField: null,
+  formValues: {},
+  generating: false,
+};
+
+function fieldNames(){ return state.fields.map(f=>f.name); }
+function groupOf(name){
+  for (const [g, items] of Object.entries(FIELD_CATALOG)) if (items.includes(name)) return g;
+  return "Other";
+}
+function groupFields(names){
+  const grouped = {};
+  names.forEach(n=>{ const g = groupOf(n); (grouped[g] ||= []).push(n); });
+  return grouped;
+}
+
+/* =========================================================
+   UX SCORE HEURISTIC
+========================================================= */
+function uxScore(names, layout){
+  const n = names.length;
+  const longFields = names.filter(f=>TYPE_HINTS[f]==="textarea").length;
+  let score = 100;
+  if (layout==="Minimal"){ score -= Math.max(0,n-6)*3; score -= longFields*2; }
+  else if (layout==="Corporate Grid"){ score -= Math.max(0,n-14)*2; score -= longFields*4; }
+  else if (layout==="Sectioned"){ score -= Math.max(0,n-18)*1; }
+  else if (layout==="Multi-Step"){ score -= n<6 ? 5 : 0; }
+  else if (layout==="Conversational"){ score -= Math.max(0,n-8)*4; }
+  return Math.max(50, Math.min(100, Math.round(score)));
+}
+function subScores(score){
+  return {
+    "Readability": Math.min(100, score+2),
+    "Info Flow": score,
+    "Density": Math.max(50, score-6),
+    "Accessibility": Math.min(100, score+4),
+    "Mobile Readiness": Math.max(50, score-3),
+  };
+}
+function recommendLayout(names){
+  let best = LAYOUTS[0], bestScore=-1, all={};
+  LAYOUTS.forEach(l=>{ const s = uxScore(names,l); all[l]=s; if(s>bestScore){bestScore=s;best=l;} });
+  return {best, all};
+}
+
+/* =========================================================
+   NAV / ROUTER
+========================================================= */
+const NAV_ITEMS = [
+  {id:"dashboard", label:"Dashboard", icon:"◉"},
+  {id:"create", label:"Create Form", icon:"＋"},
+  {id:"gallery", label:"Layout Gallery", icon:"◇"},
+  {id:"compare", label:"Compare", icon:"▦"},
+  {id:"editor", label:"Editor", icon:"✎"},
+  {id:"preview", label:"Preview & Export", icon:"↗"},
+];
+const PAGE_META = {
+  dashboard:["Dashboard","Design and optimize your enterprise forms"],
+  create:["Create Form","Define what information this form needs"],
+  gallery:["Layout Gallery","Compare intelligently generated layout compositions"],
+  compare:["Compare","See layouts side by side"],
+  editor:["Editor","Reorder fields and tune settings"],
+  preview:["Preview & Export","Try the real form and export the schema"],
+};
+
+function renderNav(){
+  const nav = document.getElementById("navList");
+  nav.innerHTML = "";
+  NAV_ITEMS.forEach(item=>{
+    const btn = document.createElement("button");
+    btn.className = "nav-item" + (state.page===item.id ? " active":"");
+    btn.innerHTML = `<span class="nav-icon">${item.icon}</span><span>${item.label}</span>`;
+    btn.onclick = ()=>{ state.page = item.id; render(); };
+    nav.appendChild(btn);
+  });
+}
+
+function goTo(page){ state.page = page; render(); window.scrollTo(0,0); }
+
+/* =========================================================
+   FIELD WIDGET RENDERER (returns HTML string)
+========================================================= */
+function renderFieldWidget(f, idx){
+  const type = f.type || TYPE_HINTS[f.name] || "text";
+  const val = state.formValues[f.name] || "";
+  const req = f.required ? '<span class="required-star">*</span>' : "";
+  let control = "";
+  if (type==="select" || SELECT_OPTIONS[f.name]){
+    const opts = SELECT_OPTIONS[f.name] || ["Option A","Option B"];
+    control = `<select onchange="setFieldValue('${f.name}', this.value)">
+      <option value="">Select...</option>
+      ${opts.map(o=>`<option ${val===o?"selected":""}>${o}</option>`).join("")}
+    </select>`;
+  } else if (type==="textarea"){
+    control = `<textarea rows="2" onchange="setFieldValue('${f.name}', this.value)">${val}</textarea>`;
+  } else if (type==="date"){
+    control = `<input class="field-input" type="date" value="${val}" onchange="setFieldValue('${f.name}', this.value)">`;
+  } else if (type==="email"){
+    control = `<input class="field-input" type="email" placeholder="name@example.com" value="${val}" onchange="setFieldValue('${f.name}', this.value)">`;
+  } else {
+    control = `<input class="field-input" type="text" value="${val}" onchange="setFieldValue('${f.name}', this.value)">`;
+  }
+  return `<div class="field-wrap"><label class="field-label">${f.name}${req}</label>${control}</div>`;
+}
+function setFieldValue(name, val){ state.formValues[name] = val; }
+
+/* =========================================================
+   LAYOUT RENDERERS -> HTML string
+========================================================= */
+function renderLayout(layoutName, names){
+  const fields = names.map(n => state.fields.find(f=>f.name===n) || {name:n, type:TYPE_HINTS[n]});
+  if (layoutName==="Minimal"){
+    return `<div>${fields.map((f,i)=>renderFieldWidget(f,i)).join("")}</div>`;
+  }
+  if (layoutName==="Corporate Grid"){
+    let html = '<div class="two-col">';
+    fields.forEach((f,i)=>{ html += renderFieldWidget(f,i); });
+    html += '</div>';
+    return html;
+  }
+  if (layoutName==="Sectioned"){
+    const grouped = groupFields(names);
+    let html = "";
+    Object.entries(grouped).forEach(([g, items])=>{
+      html += `<div class="section-block"><h5>${g} Information</h5>`;
+      items.forEach((n,i)=>{ html += renderFieldWidget(fields.find(f=>f.name===n), i); });
+      html += `</div>`;
+    });
+    return html;
+  }
+  if (layoutName==="Multi-Step"){
+    const grouped = groupFields(names);
+    const steps = Object.entries(grouped);
+    const step = Math.min(state.wizardStep, steps.length-1);
+    const [gname, gitems] = steps[step] || ["",[]];
+    let dots = '<div class="step-dots">' + steps.map((_,i)=>{
+      const cls = i<step ? "done" : (i===step ? "active" : "");
+      return `<div class="step-dot ${cls}"></div>`;
+    }).join("") + '</div>';
+    let html = dots + `<div class="muted" style="font-size:12px;margin-bottom:12px;">Step ${step+1} of ${steps.length} — ${gname}</div>`;
+    gitems.forEach((n,i)=>{ html += renderFieldWidget(fields.find(f=>f.name===n), i); });
+    html += `<div style="display:flex;justify-content:space-between;margin-top:14px;">
+      <button class="btn ghost" ${step===0?"disabled":""} onclick="wizardNav(-1)">← Back</button>
+      ${step<steps.length-1 ? `<button class="btn" onclick="wizardNav(1)">Continue →</button>` : `<span class="pill">Ready to submit</span>`}
+    </div>`;
+    return html;
+  }
+  if (layoutName==="Conversational"){
+    const idx = Math.min(state.wizardStep, names.length-1);
+    const f = fields[idx];
+    let html = `<div class="muted" style="font-size:11px;margin-bottom:8px;">Question ${idx+1} of ${names.length}</div>
+      <h3 style="margin:0 0 14px;color:var(--primary);">What's the value for ${f ? f.name : ""}?</h3>`;
+    if (f) html += renderFieldWidget(f, idx);
+    html += `<div style="display:flex;justify-content:space-between;margin-top:14px;">
+      <button class="btn ghost" ${idx===0?"disabled":""} onclick="wizardNav(-1)">← Previous</button>
+      ${idx<names.length-1 ? `<button class="btn" onclick="wizardNav(1)">Next →</button>` : `<span class="pill">All answered</span>`}
+    </div>`;
+    return html;
+  }
+  return "";
+}
+function wizardNav(delta){ state.wizardStep = Math.max(0, state.wizardStep+delta); renderContent(); }
+
+/* =========================================================
+   PAGES
+========================================================= */
+function pageDashboard(){
+  const names = fieldNames();
+  const grouped = groupFields(names);
+  const tplCards = Object.entries(TEMPLATES).map(([tname, tfields])=>`
+    <div class="tpl-card">
+      <h4>${tname}</h4>
+      <p>${tfields.length} fields</p>
+      <button class="btn secondary" onclick="useTemplate('${tname}')">Use template</button>
+    </div>`).join("");
+  return `
+    <div class="card" style="margin-bottom:20px;">
+      <h2 style="margin:0 0 6px;color:var(--primary);">Design better forms for better workflows</h2>
+      <p class="muted" style="margin:0;">Transform ordinary information requirements into clear, responsive, and professional digital interfaces.</p>
+    </div>
+    <div class="grid grid-4" style="margin-bottom:20px;">
+      <div class="card"><div class="stat-value">${names.length}</div><div class="stat-label">Fields selected</div></div>
+      <div class="card"><div class="stat-value">${Object.keys(grouped).length}</div><div class="stat-label">Groups detected</div></div>
+      <div class="card"><div class="stat-value">${Object.keys(TEMPLATES).length}</div><div class="stat-label">Templates available</div></div>
+      <div class="card"><div class="stat-value">${LAYOUTS.length}</div><div class="stat-label">Layouts generated</div></div>
+    </div>
+    <p class="section-title">Quick start with a template</p>
+    <div class="grid grid-4">${tplCards}</div>
+    <div class="card" style="margin-top:20px;background:var(--light-blue);border:none;">
+      <strong style="color:var(--primary);">Next step:</strong> <span class="muted">Go to <b>Create Form</b> to customize fields, then <b>Layout Gallery</b> to generate and compare designs.</span>
+    </div>
+  `;
+}
+function useTemplate(name){
+  state.formName = name;
+  state.fields = TEMPLATES[name].map(n=>({name:n, type:TYPE_HINTS[n]||"text", required:true}));
+  goTo("create");
+}
+
+function pageCreate(){
+  const selected = new Set(fieldNames());
+  let catalogHtml = '<div class="grid grid-4">';
+  Object.entries(FIELD_CATALOG).forEach(([group, items])=>{
+    catalogHtml += `<div><div class="field-group-title">${group}</div>`;
+    items.forEach(item=>{
+      const checked = selected.has(item) ? "checked" : "";
+      catalogHtml += `<label class="checkbox-row"><input type="checkbox" ${checked} onchange="toggleField('${item}', this.checked)"> ${item}</label>`;
+    });
+    catalogHtml += `</div>`;
+  });
+  catalogHtml += '</div>';
+
+  const customFields = state.fields.filter(f=>!Object.values(FIELD_CATALOG).flat().includes(f.name));
+  const chips = customFields.map(f=>`<span class="chip">${f.name} <button onclick="removeField('${f.name}')">&times;</button></span>`).join("");
+
+  return `
+    <div class="card" style="margin-bottom:18px;">
+      <label class="field-label">Form Name</label>
+      <input class="field-input" value="${state.formName}" oninput="state.formName=this.value; document.getElementById('formNameEcho') && (document.getElementById('formNameEcho').textContent=this.value)">
+    </div>
+    <div class="card" style="margin-bottom:18px;">
+      <p class="section-title">What information does this form need?</p>
+      ${catalogHtml}
+    </div>
+    <div class="card">
+      <p class="section-title">Custom fields</p>
+      <div class="custom-field-form">
+        <div class="fw"><label class="field-label">Field name</label><input class="field-input" id="customFieldName" placeholder="e.g. Blood Group"></div>
+        <div style="width:150px;"><label class="field-label">Type</label>
+          <select id="customFieldType">
+            <option value="text">text</option>
+            <option value="email">email</option>
+            <option value="date">date</option>
+            <option value="select">select</option>
+            <option value="textarea">textarea</option>
+          </select>
+        </div>
+        <button class="btn" onclick="addCustomField()">+ Add field</button>
+      </div>
+      <div style="margin-top:10px;">${chips || '<span class="muted" style="font-size:12.5px;">No custom fields yet.</span>'}</div>
+    </div>
+    <div class="card" style="margin-top:18px;background:var(--light-blue);border:none;">
+      <b style="color:var(--primary);">${fieldNames().length} fields selected</b>
+      <span class="muted"> across ${Object.keys(groupFields(fieldNames())).length} groups. Head to <b>Layout Gallery</b> next.</span>
+    </div>
+  `;
+}
+function toggleField(name, checked){
+  if (checked){
+    if (!fieldNames().includes(name)) state.fields.push({name, type:TYPE_HINTS[name]||"text", required:false});
+  } else {
+    state.fields = state.fields.filter(f=>f.name!==name);
+  }
+  renderContent();
+}
+function addCustomField(){
+  const nameInput = document.getElementById("customFieldName");
+  const typeInput = document.getElementById("customFieldType");
+  const name = nameInput.value.trim();
+  if (!name) return;
+  TYPE_HINTS[name] = typeInput.value;
+  state.fields.push({name, type:typeInput.value, required:false});
+  renderContent();
+}
+function removeField(name){
+  state.fields = state.fields.filter(f=>f.name!==name);
+  renderContent();
+}
+
+function pageGallery(){
+  const names = fieldNames();
+  if (!names.length) return emptyState("No fields selected yet", "Go to Create Form to choose the information this form needs.", "create");
+  const {best, all} = recommendLayout(names);
+  const active = state.galleryActiveLayout;
+  const score = all[active];
+  const subs = subScores(score);
+
+  const tabs = LAYOUTS.map(l=>`
+    <button class="layout-tab ${l===active?'active':''}" onclick="setGalleryLayout('${l}')">
+      ${l} <span class="badge">${all[l]}</span>
+    </button>`).join("");
+
+  const subRows = Object.entries(subs).map(([k,v])=>`
+    <div class="score-bar-row"><span style="width:100px;">${k}</span>
+      <div class="score-bar-track"><div class="score-bar-fill" style="width:${v}%"></div></div>
+      <span style="width:26px;text-align:right;">${v}</span></div>`).join("");
+
+  return `
+    <div class="card" style="margin-bottom:16px;background:var(--light-blue);border:none;">
+      <b style="color:var(--primary);">Recommended layout: ${best}</b>
+      <span class="muted"> — based on field count, field types, and grouping of your ${names.length} fields.</span>
+    </div>
+    <div class="layout-tabs">${tabs}</div>
+    <div class="grid" style="grid-template-columns:1fr 260px;gap:20px;">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 style="margin:0;color:var(--primary);">${state.formName}</h3>
+          <button class="btn" onclick="chooseLayout('${active}')">Use this layout →</button>
+        </div>
+        <div class="layout-preview">${renderLayout(active, names)}</div>
+      </div>
+      <div>
+        <div class="score-box">
+          <div class="score-num">${score}<span style="font-size:15px;color:var(--muted);">/100</span></div>
+          <div class="muted" style="font-size:11px;">UX Score (heuristic demo, not a validated metric)</div>
+          <div style="text-align:left;margin-top:14px;">${subRows}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function setGalleryLayout(l){ state.galleryActiveLayout = l; state.wizardStep = 0; renderContent(); }
+function chooseLayout(l){
+  state.chosenLayout = l;
+  state.wizardStep = 0;
+  goTo("editor");
+}
+
+function pageCompare(){
+  const names = fieldNames();
+  if (!names.length) return emptyState("No fields selected yet", "Go to Create Form to choose the information this form needs.", "create");
+  const {all} = recommendLayout(names);
+  const checks = LAYOUTS.map(l=>{
+    const checked = state.compareSelection.includes(l) ? "checked" : "";
+    return `<label class="checkbox-row"><input type="checkbox" ${checked} onchange="toggleCompare('${l}', this.checked)"> ${l}</label>`;
+  }).join("");
+  const cols = state.compareSelection.slice(0,3).map(l=>`
+    <div class="compare-col">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <b>${l}</b><span class="pill">${all[l]}/100</span>
+      </div>
+      ${renderLayout(l, names)}
+    </div>`).join("");
+  return `
+    <div class="card" style="margin-bottom:16px;">
+      <p class="section-title">Choose up to 3 layouts to compare</p>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;">${checks}</div>
+    </div>
+    <div class="grid grid-3">${cols}</div>
+  `;
+}
+function toggleCompare(l, checked){
+  if (checked){
+    if (state.compareSelection.length>=3){ renderContent(); return; }
+    state.compareSelection.push(l);
+  } else {
+    state.compareSelection = state.compareSelection.filter(x=>x!==l);
+  }
+  renderContent();
+}
+
+let dragIndex = null;
+function pageEditor(){
+  const names = fieldNames();
+  if (!names.length) return emptyState("No fields selected yet", "Go to Create Form to choose the information this form needs.", "create");
+  const layout = state.chosenLayout || state.galleryActiveLayout;
+
+  const listItems = state.fields.map((f,i)=>`
+    <div class="field-list-item" draggable="true"
+      ondragstart="onDragStart(event, ${i})" ondragover="onDragOver(event, ${i})"
+      ondrop="onDrop(event, ${i})" ondragend="onDragEnd(event)"
+      onclick="selectEditorField('${f.name}')"
+      class="field-list-item ${state.editorSelectedField===f.name ? 'selected':''}">
+      <span class="drag-handle">⋮⋮</span><span class="fname">${f.name}</span>
+      <button onclick="event.stopPropagation(); removeField('${f.name}'); renderContent();">&times;</button>
+    </div>`).join("");
+
+  const sel = state.fields.find(f=>f.name===state.editorSelectedField) || state.fields[0];
+  const propsPanel = sel ? `
+    <div class="field-wrap"><label class="field-label">Label</label><input class="field-input" value="${sel.name}" disabled></div>
+    <div class="field-wrap"><label class="field-label">Type</label>
+      <select onchange="setFieldType('${sel.name}', this.value)">
+        ${["text","email","date","select","textarea"].map(t=>`<option ${sel.type===t?"selected":""}>${t}</option>`).join("")}
+      </select>
+    </div>
+    <label class="checkbox-row"><input type="checkbox" ${sel.required?"checked":""} onchange="setFieldRequired('${sel.name}', this.checked)"> Required field</label>
+  ` : `<p class="muted" style="font-size:12.5px;">Select a field to edit its settings.</p>`;
+
+  const vpWidths = {desktop:"100%", tablet:"640px", mobile:"380px"};
+
+  return `
+    <div class="editor-layout">
+      <div>
+        <p class="section-title">Fields — drag to reorder</p>
+        ${listItems}
+      </div>
+      <div>
+        <div class="viewport-toggle">
+          ${["desktop","tablet","mobile"].map(v=>`<button class="vp-btn ${state.viewport===v?'active':''}" onclick="setViewport('${v}')">${v[0].toUpperCase()+v.slice(1)}</button>`).join("")}
+          <div style="margin-left:auto;">
+            <select onchange="setEditorLayout(this.value)" style="width:160px;">
+              ${LAYOUTS.map(l=>`<option ${layout===l?"selected":""}>${l}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        <div class="canvas-shell" style="max-width:${vpWidths[state.viewport]}">
+          <h3 style="margin:0 0 14px;color:var(--primary);">${state.formName}</h3>
+          ${renderLayout(layout, names)}
+        </div>
+      </div>
+      <div class="card">
+        <p class="section-title">Field settings</p>
+        ${propsPanel}
+      </div>
+    </div>
+  `;
+}
+function onDragStart(e, i){ dragIndex = i; e.currentTarget.classList.add("dragging"); }
+function onDragOver(e, i){ e.preventDefault(); e.currentTarget.classList.add("drag-over"); }
+function onDrop(e, i){
+  e.preventDefault();
+  e.currentTarget.classList.remove("drag-over");
+  if (dragIndex===null || dragIndex===i) return;
+  const moved = state.fields.splice(dragIndex,1)[0];
+  state.fields.splice(i,0,moved);
+  dragIndex = null;
+  renderContent();
+}
+function onDragEnd(e){ document.querySelectorAll(".field-list-item").forEach(el=>el.classList.remove("dragging","drag-over")); }
+function selectEditorField(name){ state.editorSelectedField = name; renderContent(); }
+function setFieldType(name, type){
+  const f = state.fields.find(f=>f.name===name); if(f) f.type=type; TYPE_HINTS[name]=type;
+  renderContent();
+}
+function setFieldRequired(name, val){
+  const f = state.fields.find(f=>f.name===name); if(f) f.required=val;
+  renderContent();
+}
+function setViewport(v){ state.viewport=v; renderContent(); }
+function setEditorLayout(l){ state.chosenLayout = l; state.wizardStep = 0; renderContent(); }
+
+function pagePreview(){
+  const names = fieldNames();
+  if (!names.length) return emptyState("No fields selected yet", "Go to Create Form to choose the information this form needs.", "create");
+  const layout = state.chosenLayout || state.galleryActiveLayout;
+
+  const schema = {
+    form_name: state.formName,
+    layout: layout,
+    generated_at: new Date().toISOString(),
+    groups: groupFields(names),
+    fields: state.fields,
+  };
+  const jsonStr = JSON.stringify(schema, null, 2);
+
+  const jsxLines = [`<FormSection title="${state.formName}">`, ""];
+  state.fields.forEach(f=>{
+    const comp = f.type==="select" ? "Select" : f.type==="textarea" ? "TextArea" : "Input";
+    jsxLines.push(`  <${comp} label="${f.name}"${f.required?" required":""} />`);
+  });
+  jsxLines.push("", "</FormSection>");
+  const jsxStr = jsxLines.join("\n");
+
+  return `
+    <div class="grid" style="grid-template-columns:1fr 380px;gap:20px;">
+      <div>
+        <p class="section-title">Live preview — active layout: ${layout}</p>
+        <div class="layout-preview">
+          <h3 style="margin:0 0 14px;color:var(--primary);">${state.formName}</h3>
+          ${renderLayout(layout, names)}
+        </div>
+      </div>
+      <div>
+        <p class="section-title">Export</p>
+        <div class="card" style="margin-bottom:12px;">
+          <button class="btn" style="width:100%;margin-bottom:8px;" onclick="downloadJSON()">⬇ Download JSON schema</button>
+          <button class="btn secondary" style="width:100%;" onclick="toggleCode()">{ } View generated code</button>
+        </div>
+        <div id="codePanel" style="display:none;">
+          <div class="code-block">${escapeHtml(jsxStr)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function toggleCode(){
+  const panel = document.getElementById("codePanel");
+  panel.style.display = panel.style.display==="none" ? "block" : "none";
+}
+function downloadJSON(){
+  const names = fieldNames();
+  const layout = state.chosenLayout || state.galleryActiveLayout;
+  const schema = {
+    form_name: state.formName, layout, generated_at: new Date().toISOString(),
+    groups: groupFields(names), fields: state.fields,
+  };
+  const blob = new Blob([JSON.stringify(schema,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "nishat_form_schema.json"; a.click();
+  URL.revokeObjectURL(url);
+}
+function escapeHtml(s){ return s.replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+function emptyState(title, sub, targetPage){
+  return `<div class="empty-state"><h3>${title}</h3><p>${sub}</p>
+    <button class="btn" onclick="goTo('${targetPage}')">Go to Create Form</button></div>`;
+}
+
+/* =========================================================
+   RENDER
+========================================================= */
+function renderContent(){
+  const [title, sub] = PAGE_META[state.page];
+  const navItem = NAV_ITEMS.find(n=>n.id===state.page);
+  document.getElementById("pageTitle").textContent = title;
+  document.getElementById("pageSub").textContent = sub;
+  document.getElementById("pageIcon").textContent = navItem ? navItem.icon : "◉";
+  document.getElementById("pageCrumb").textContent = "Nishat Form Studio  /  " + title;
+  let html = "";
+  if (state.page==="dashboard") html = pageDashboard();
+  else if (state.page==="create") html = pageCreate();
+  else if (state.page==="gallery") html = pageGallery();
+  else if (state.page==="compare") html = pageCompare();
+  else if (state.page==="editor") html = pageEditor();
+  else if (state.page==="preview") html = pagePreview();
+  document.getElementById("content").innerHTML = html;
+}
+function render(){ renderNav(); renderContent(); }
+
+render();
+</script>
+</body>
+</html>
