@@ -10,7 +10,6 @@ from flask import (
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db
-
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("DEARLY_SECRET_KEY", "dearly-dev-secret-change-me")
 
@@ -33,8 +32,6 @@ def current_user():
             return user
         except sqlite3.OperationalError:
             return None
-
-
 def login_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
@@ -52,8 +49,6 @@ def login_required(view):
 @app.context_processor
 def inject_globals():
     return {"me": current_user()}
-
-
 def are_penpals(conn, user_a, user_b):
     row = conn.execute(
         """SELECT 1 FROM penpal_requests
@@ -70,7 +65,6 @@ def landing():
     if "user_id" in session:
         return redirect(url_for("desk"))
     return render_template("landing.html")
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
