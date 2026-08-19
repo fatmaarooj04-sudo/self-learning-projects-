@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% from "_letter_card.html" import letter_card %}
 {% block title %}{{ profile_user['username'] }} — Dearly{% endblock %}
-
 {% block content %}
 <header class="profile-header">
   <div class="person-avatar person-avatar-large">{{ profile_user['avatar_seed'] or profile_user['username'][:2]|upper }}</div>
