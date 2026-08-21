@@ -19,8 +19,6 @@ const DearlySpeech = (function () {
     utterance.pitch = 1.2;
     utterance.volume = 1;
     utterance.rate = rate || 1;
-
-    // Try to use a female voice
     const voices = window.speechSynthesis.getVoices();
 
     const femaleVoice =
