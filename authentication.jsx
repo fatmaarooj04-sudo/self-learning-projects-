@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 const GOLD    = '#c9a84c'
 const CRIMSON = '#7a1a1a'
 
-/* ─── RAIN ─────────────────────────────────────────────────────────── */
 const RAIN_DROPS = Array.from({ length: 120 }, (_, i) => ({
   id: i,
   left: `${(i * 7.3 + Math.sin(i) * 40) % 100}%`,
@@ -24,7 +23,6 @@ function Rain() {
   )
 }
 
-/* ─── DUST MOTES ────────────────────────────────────────────────────── */
 const MOTES = Array.from({ length: 28 }, (_, i) => ({
   id: i,
   left: `${28 + (i * 11.7 + Math.cos(i) * 20) % 45}%`,
