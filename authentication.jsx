@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-/* ═══════════════════════════════════════════════════════════════════
-   NOCTRA — Cinematic Investigation Landing
-═══════════════════════════════════════════════════════════════════ */
 
 const GOLD    = '#c9a84c'
 const CRIMSON = '#7a1a1a'
