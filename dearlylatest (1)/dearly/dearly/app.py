@@ -171,7 +171,6 @@ def desk():
         (me["id"], me["id"], me["id"]),
     ).fetchall()
 
-    # Fetch uploaded memories to show on the desk
     memories = conn.execute(
         "SELECT * FROM memories WHERE user_id = ? ORDER BY created_at DESC LIMIT 6",
         (me["id"],)
