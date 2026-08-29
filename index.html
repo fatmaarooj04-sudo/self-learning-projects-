@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Copilot AI — Premium Content Strategist</title>
+    <meta name="description" content="AI-powered creative strategist and editing advisor for TikTok, Instagram Reels, and YouTube Shorts.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Floating Particle Background -->
+    <canvas id="particles-canvas"></canvas>
+    
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header glass-card">
+            <div class="logo-area">
+                <div class="logo-glow"></div>
+                <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+                <h1>Creator <span class="accent-text">Copilot AI</span></h1>
+            </div>
+            
+            <div class="header-widgets">
+                <!-- Daily Streak -->
+                <div class="streak-widget glass-card" title="Daily Creator Streak">
+                    <i class="fa-solid fa-fire streak-icon"></i>
+                    <span id="streak-count">1 Day Streak</span>
+                </div>
+                
+                <!-- API Key Config -->
+                <div class="api-widget glass-card">
+                    <i class="fa-solid fa-key api-icon"></i>
+                    <input type="password" id="api-key-input" placeholder="Enter Gemini API Key..." />
+                    <button id="save-key-btn" class="icon-btn" title="Save API Key"><i class="fa-solid fa-floppy-disk"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace Grid -->
+        <main class="workspace-grid">
+            
+            <!-- Left Column: Upload, Mascot & Gamification -->
+            <section class="workspace-col col-sidebar">
+                
+                <!-- Upload Card -->
+                <div class="glass-card upload-card animate-slide-in">
+                    <div class="card-header">
+                        <i class="fa-solid fa-cloud-arrow-up card-icon purple-glow"></i>
+                        <h2>Upload Content</h2>
+                    </div>
+                    
+                    <form id="analyze-form">
+                        <div class="drop-zone" id="video-drop-zone">
+                            <i class="fa-solid fa-video drop-icon"></i>
+                            <p class="drop-title">Drag & drop your Reel/TikTok video</p>
+                            <p class="drop-subtitle">Supports MP4, MOV (Max 50MB)</p>
+                            <input type="file" id="video-file" accept="video/mp4,video/quicktime" required style="display: none;">
+                            <div class="file-name-preview" id="video-preview-name"></div>
+                        </div>
+
+                        <div class="optional-uploads">
+                            <!-- Thumbnail -->
+                            <div class="optional-input-wrapper">
+                                <label for="thumbnail-file" class="optional-label">
+                                    <i class="fa-solid fa-image"></i> Add Thumbnail (Optional)
+                                </label>
+                                <input type="file" id="thumbnail-file" accept="image/*" class="file-input-slim">
+                            </div>
+
+                            <!-- Voice Note -->
+                            <div class="optional-input-wrapper">
+                                <label for="voice-file" class="optional-label">
+                                    <i class="fa-solid fa-microphone"></i> Add Voice Goal Note (Optional)
+                                </label>
+                                <input type="file" id="voice-file" accept="audio/*" class="file-input-slim">
+                            </div>
+                        </div>
+
+                        <div class="goal-input-wrapper">
+                            <label for="goal-text" class="field-label">Creator Goal or Target Vibe</label>
+                            <textarea id="goal-text" placeholder="e.g., 'I want this Reel to feel emotional and relatable, targeting college graduates...'" rows="2"></textarea>
+                        </div>
+
+                        <button type="submit" id="analyze-btn" class="primary-btn btn-glowing">
+                            <span>Analyze Content</span>
+                            <i class="fa-solid fa-circle-play"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- SVG Mascot Card -->
+                <div class="glass-card mascot-card animate-slide-in">
+                    <div class="mascot-speech-bubble">
+                        <p id="mascot-text">Hey creator! Upload a video and let's craft something viral together.</p>
+                    </div>
+                    <div class="mascot-wrapper">
+                        <!-- Custom Animated SVG Mascot -->
+                        <svg class="copilot-mascot idle" id="mascot-svg" viewBox="0 0 200 200">
+                            <!-- Glow Shadow -->
+                            <circle cx="100" cy="150" r="30" fill="rgba(168, 85, 247, 0.15)" filter="blur(15px)" id="mascot-shadow"></circle>
+                            <!-- Body -->
+                            <g class="mascot-body-group">
+                                <!-- Torso -->
+                                <rect x="65" y="90" width="70" height="50" rx="20" fill="url(#body-gradient)" stroke="#a855f7" stroke-width="2"></rect>
+                                <!-- Screen / Face Outline -->
+                                <rect x="75" y="98" width="50" height="34" rx="10" fill="#0f172a" stroke="#6366f1" stroke-width="1.5"></rect>
+                                <!-- Eye Left -->
+                                <circle class="mascot-eye eye-left" cx="90" cy="115" r="5" fill="#10b981"></circle>
+                                <!-- Eye Right -->
+                                <circle class="mascot-eye eye-right" cx="110" cy="115" r="5" fill="#10b981"></circle>
+                                <!-- Mouth -->
+                                <path class="mascot-mouth" d="M94 123 Q100 127 106 123" stroke="#10b981" stroke-width="2" fill="none" stroke-linecap="round"></path>
+                                <!-- Ears / Antennas -->
+                                <line x1="55" y1="115" x2="65" y2="115" stroke="#a855f7" stroke-width="3" stroke-linecap="round"></line>
+                                <line x1="135" y1="115" x2="145" y2="115" stroke="#a855f7" stroke-width="3" stroke-linecap="round"></line>
+                                <!-- Top Antenna -->
+                                <line x1="100" y1="90" x2="100" y2="78" stroke="#a855f7" stroke-width="3" stroke-linecap="round"></line>
+                                <circle class="antenna-bulb" cx="100" cy="74" r="5" fill="#a855f7"></circle>
+                            </g>
+                            
+                            <!-- Gradients Definition -->
+                            <defs>
+                                <linearGradient id="body-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#1e1b4b" />
+                                    <stop offset="100%" stop-color="#4c1d95" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="mascot-state-indicator">
+                        <span class="status-dot green"></span>
+                        <span id="mascot-status-label">Ready to advise</span>
+                    </div>
+                </div>
+
+                <!-- Gamification: Plant & Badges -->
+                <div class="glass-card gamification-card animate-slide-in">
+                    <div class="card-header">
+                        <i class="fa-solid fa-seedling card-icon green-glow"></i>
+                        <h2>Creator Plant & Badges</h2>
+                    </div>
+                    <div class="gamification-content">
+                        <!-- Plant Graphic -->
+                        <div class="plant-stage-wrapper">
+                            <div class="plant-pot">
+                                <!-- Custom SVG dynamic plant -->
+                                <svg id="growth-plant-svg" viewBox="0 0 100 120" width="80" height="96">
+                                    <!-- Pot -->
+                                    <path d="M35 100 L65 100 L70 120 L30 120 Z" fill="#3f3f46" stroke="#52525b" stroke-width="2"></path>
+                                    <!-- Plant Stems -->
+                                    <path class="plant-stem" id="stem-1" d="M50 100 Q45 80 50 60" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" style="display: none;"></path>
+                                    <path class="plant-leaf" id="leaf-1" d="M50 80 Q30 70 45 75 Q40 85 50 80 Z" fill="#4ade80" style="display: none;"></path>
+                                    
+                                    <!-- Sprout -->
+                                    <path class="plant-sprout" id="plant-sprout-node" d="M50 100 L50 95 Q47 90 53 85" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"></path>
+                                    
+                                    <!-- Flower (Big state) -->
+                                    <circle class="plant-flower" id="flower-center" cx="50" cy="50" r="6" fill="#facc15" style="display: none;"></circle>
+                                    <path class="plant-flower" id="flower-petals" d="M50 40 Q55 45 50 50 Q45 45 50 40 Z M50 50 Q55 55 50 60 Q45 55 50 50 Z M40 50 Q45 45 50 50 Q45 55 40 50 Z M50 50 Q55 45 60 50 Q55 55 50 50 Z" fill="#ec4899" style="display: none;"></path>
+                                </svg>
+                            </div>
+                            <div class="plant-info">
+                                <span class="plant-label">Creator Plant</span>
+                                <span class="plant-stage-name" id="plant-stage-title">Sprout (Level 1)</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Badges Grid -->
+                        <div class="badges-title">Unlocked Achievements</div>
+                        <div class="badges-grid" id="badges-container">
+                            <div class="badge-item locked" id="badge-upload" title="First Upload Completed">
+                                <i class="fa-solid fa-trophy"></i>
+                                <span>First Upload</span>
+                            </div>
+                            <div class="badge-item locked" id="badge-hook" title="Achieved a Hook Score > 90">
+                                <i class="fa-solid fa-anchor"></i>
+                                <span>Hook Master</span>
+                            </div>
+                            <div class="badge-item locked" id="badge-aesthetic" title="Achieved Visual Score > 90">
+                                <i class="fa-solid fa-palette"></i>
+                                <span>Aesthetic King</span>
+                            </div>
+                            <div class="badge-item locked" id="badge-viral" title="Got an overall score > 85">
+                                <i class="fa-solid fa-chart-line"></i>
+                                <span>Perfect Post</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Middle Column: Main Analysis & Timeline Dashboard -->
+            <section class="workspace-col col-main">
+                
+                <!-- Keyframes Visual Card -->
+                <div class="glass-card keyframes-card animate-fade-in" id="keyframes-section" style="display: none;">
+                    <div class="card-header">
+                        <i class="fa-solid fa-images card-icon blue-glow"></i>
+                        <h2>Extracted Keyframes & Visual Quality</h2>
+                    </div>
+                    <div class="keyframes-grid" id="keyframes-container">
+                        <!-- Keyframes injected here -->
+                    </div>
+                    <div class="visual-colors-wrapper">
+                        <h3>Visual Palette Palette:</h3>
+                        <div class="color-palette-bar" id="palette-bar">
+                            <!-- Hex colors injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Summary Dashboard -->
+                <div class="dashboard-landing glass-card" id="landing-placeholder">
+                    <div class="landing-content">
+                        <i class="fa-solid fa-wand-magic-sparkles landing-icon"></i>
+                        <h2>No Video Analyzed Yet</h2>
+                        <p>Upload your video in the left sidebar to generate a content strategy, editing timeline, and professional quality report card.</p>
+                    </div>
+                </div>
+
+                <div class="analysis-results" id="results-container" style="display: none;">
+                    <!-- Top Row: Score gauge & Before vs After comparison -->
+                    <div class="metrics-row">
+                        <!-- Quality Score Gauge -->
+                        <div class="glass-card score-card">
+                            <div class="gauge-wrapper">
+                                <svg class="radial-gauge" viewBox="0 0 100 100">
+                                    <circle class="gauge-bg" cx="50" cy="50" r="40"></circle>
+                                    <circle class="gauge-fill" id="overall-score-gauge" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                                    <text class="gauge-text-num" id="overall-score-val" x="50" y="55">0</text>
+                                    <text class="gauge-text-label" x="50" y="72">Score</text>
+                                </svg>
+                            </div>
+                            <div class="score-summary-details">
+                                <h3 id="overall-score-title">Assessing...</h3>
+                                <p id="overall-score-desc"></p>
+                            </div>
+                        </div>
+
+                        <!-- Before vs After -->
+                        <div class="glass-card comparison-card">
+                            <div class="card-header">
+                                <i class="fa-solid fa-arrows-left-right card-icon yellow-glow"></i>
+                                <h2>Before vs After Suggestions</h2>
+                            </div>
+                            <div class="comparison-grid">
+                                <div class="comp-col before-col">
+                                    <div class="comp-title">Before AI</div>
+                                    <div class="comp-metric">Hook Score: <span class="bad-score" id="before-hook">--</span></div>
+                                    <div class="comp-metric">Caption: <span class="bad-score" id="before-caption">--</span></div>
+                                    <div class="comp-metric">Retention: <span class="bad-score" id="before-retention">--</span></div>
+                                </div>
+                                <div class="comp-divider">
+                                    <div class="improvement-pill animate-pulse">
+                                        <i class="fa-solid fa-arrow-up"></i>
+                                        <span id="improvement-pct">+0%</span>
+                                    </div>
+                                </div>
+                                <div class="comp-col after-col">
+                                    <div class="comp-title">After AI Suggestions</div>
+                                    <div class="comp-metric">Hook Score: <span class="good-score" id="after-hook">--</span></div>
+                                    <div class="comp-metric">Caption: <span class="good-score" id="after-caption">--</span></div>
+                                    <div class="comp-metric">Retention: <span class="good-score" id="after-retention">--</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category metrics card -->
+                    <div class="glass-card category-metrics-card">
+                        <div class="card-header">
+                            <i class="fa-solid fa-sliders card-icon blue-glow"></i>
+                            <h2>Quality Categories Evaluation</h2>
+                        </div>
+                        <div class="metrics-grid">
+                            <div class="metric-progress-item">
+                                <div class="metric-info">
+                                    <span>Hook Strength</span>
+                                    <span id="metric-val-hook">0/100</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar purple" id="progress-bar-hook" style="width: 0%"></div>
+                                </div>
+                                <p class="metric-expl" id="expl-hook"></p>
+                            </div>
+
+                            <div class="metric-progress-item">
+                                <div class="metric-info">
+                                    <span>Visual Clarity</span>
+                                    <span id="metric-val-visual">0/100</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar blue" id="progress-bar-visual" style="width: 0%"></div>
+                                </div>
+                                <p class="metric-expl" id="expl-visual"></p>
+                            </div>
+
+                            <div class="metric-progress-item">
+                                <div class="metric-info">
+                                    <span>Caption Quality</span>
+                                    <span id="metric-val-caption">0/100</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar yellow" id="progress-bar-caption" style="width: 0%"></div>
+                                </div>
+                                <p class="metric-expl" id="expl-caption"></p>
+                            </div>
+
+                            <div class="metric-progress-item">
+                                <div class="metric-info">
+                                    <span>Editing Readiness</span>
+                                    <span id="metric-val-editing">0/100</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar green" id="progress-bar-editing" style="width: 0%"></div>
+                                </div>
+                                <p class="metric-expl" id="expl-editing"></p>
+                            </div>
+
+                            <div class="metric-progress-item">
+                                <div class="metric-info">
+                                    <span>Engagement Potential</span>
+                                    <span id="metric-val-engagement">0/100</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar pink" id="progress-bar-engagement" style="width: 0%"></div>
+                                </div>
+                                <p class="metric-expl" id="expl-engagement"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Suggestions & Copies -->
+                    <div class="glass-card suggestion-details-card">
+                        <div class="card-header">
+                            <i class="fa-solid fa-lightbulb card-icon yellow-glow"></i>
+                            <h2>Suggestions & Copyable Material</h2>
+                        </div>
+                        
+                        <div class="suggestions-tabs">
+                            <button class="tab-btn active" data-tab="tab-hook"><i class="fa-solid fa-anchor"></i> Stronger Hook</button>
+                            <button class="tab-btn" data-tab="tab-script"><i class="fa-solid fa-file-signature"></i> Script Improvements</button>
+                            <button class="tab-btn" data-tab="tab-caption"><i class="fa-solid fa-paragraph"></i> Captions & CTAs</button>
+                            <button class="tab-btn" data-tab="tab-details"><i class="fa-solid fa-music"></i> Vibes & Tips</button>
+                        </div>
+                        
+                        <div class="tab-content-container">
+                            <!-- Hook Tab -->
+                            <div class="tab-panel active" id="tab-hook">
+                                <div class="suggestion-block-header">
+                                    <h3>Hook Optimization</h3>
+                                    <div class="block-controls">
+                                        <button class="tts-btn icon-btn" id="tts-hook-btn" title="Listen to hook"><i class="fa-solid fa-volume-high"></i></button>
+                                        <button class="copy-btn icon-btn" id="copy-hook-btn" title="Copy hook"><i class="fa-solid fa-copy"></i></button>
+                                    </div>
+                                </div>
+                                <blockquote class="quote-display" id="display-hook"></blockquote>
+                            </div>
+
+                            <!-- Script Tab -->
+                            <div class="tab-panel" id="tab-script">
+                                <div class="suggestion-block-header">
+                                    <h3>Recommended Script Improvements</h3>
+                                    <div class="block-controls">
+                                        <button class="tts-btn icon-btn" id="tts-script-btn" title="Listen to script"><i class="fa-solid fa-volume-high"></i></button>
+                                        <button class="copy-btn icon-btn" id="copy-script-btn" title="Copy script"><i class="fa-solid fa-copy"></i></button>
+                                    </div>
+                                </div>
+                                <div class="suggestion-body" id="display-script"></div>
+                            </div>
+
+                            <!-- Caption Tab -->
+                            <div class="tab-panel" id="tab-caption">
+                                <div class="suggestion-block-header">
+                                    <h3>Optimized Social Caption</h3>
+                                    <div class="block-controls">
+                                        <button class="tts-btn icon-btn" id="tts-caption-btn" title="Listen to caption"><i class="fa-solid fa-volume-high"></i></button>
+                                        <button class="copy-btn icon-btn" id="copy-caption-btn" title="Copy caption"><i class="fa-solid fa-copy"></i></button>
+                                    </div>
+                                </div>
+                                <blockquote class="quote-display" id="display-caption"></blockquote>
+                                
+                                <h3>Call to Action (CTA)</h3>
+                                <div class="inline-cta-box" id="display-cta"></div>
+
+                                <h3>Hashtags</h3>
+                                <div class="hashtags-container" id="display-hashtags"></div>
+                            </div>
+
+                            <!-- Vibes / Music Tab -->
+                            <div class="tab-panel" id="tab-details">
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <h4><i class="fa-solid fa-music"></i> Music / Sound Vibe</h4>
+                                        <p id="display-music"></p>
+                                    </div>
+                                    <div class="detail-item">
+                                        <h4><i class="fa-solid fa-mask"></i> Tone Directions</h4>
+                                        <p id="display-tone"></p>
+                                    </div>
+                                    <div class="detail-item">
+                                        <h4><i class="fa-solid fa-photo-film"></i> Thumbnail Recommendation</h4>
+                                        <p id="display-thumbnail"></p>
+                                    </div>
+                                </div>
+                                <div class="retention-tips-wrapper">
+                                    <h4><i class="fa-solid fa-chart-line"></i> Retention Boosting Tips</h4>
+                                    <ul id="display-retention-list">
+                                        <!-- Tips injected here -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Editing Plan Timeline -->
+                    <div class="glass-card timeline-card">
+                        <div class="card-header">
+                            <i class="fa-solid fa-timeline card-icon purple-glow"></i>
+                            <h2>AI Editing Timeline</h2>
+                        </div>
+                        <div class="timeline-container" id="timeline-list">
+                            <!-- Timeline elements injected here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Chat & Dev Tools -->
+            <section class="workspace-col col-right">
+                
+                <!-- Chat panel -->
+                <div class="glass-card chat-card animate-slide-in">
+                    <div class="card-header">
+                        <i class="fa-solid fa-comments-dollar card-icon purple-glow"></i>
+                        <h2>Chat with your Video</h2>
+                    </div>
+                    
+                    <div class="chat-messages-container" id="chat-messages">
+                        <div class="chat-bubble bot">
+                            <p>I have processed your video details. Let me know how you want to adjust the script, hook, or caption!</p>
+                        </div>
+                    </div>
+                    
+                    <form id="chat-form" class="chat-input-row">
+                        <input type="text" id="chat-input" placeholder="e.g., 'Make the hook shorter for Gen Z'..." required />
+                        <button type="submit" class="icon-btn send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                </div>
+
+                <!-- Dev Console & Latency Evaluation -->
+                <div class="glass-card dev-console-card animate-slide-in">
+                    <div class="card-header">
+                        <i class="fa-solid fa-bug card-icon red-glow"></i>
+                        <h2>Dev Console & Metrics</h2>
+                    </div>
+                    <div class="dev-metrics-body">
+                        <!-- Latency List -->
+                        <div class="latency-summary">
+                            <h3>Pipeline Latency Evaluation</h3>
+                            <div class="latency-item">
+                                <span>Keyframe Extraction:</span>
+                                <span class="latency-value" id="latency-kf">0 ms</span>
+                            </div>
+                            <div class="latency-item">
+                                <span>Speech-to-Text:</span>
+                                <span class="latency-value" id="latency-stt">0 ms</span>
+                            </div>
+                            <div class="latency-item">
+                                <span>Vision Analysis:</span>
+                                <span class="latency-value" id="latency-vision">0 ms</span>
+                            </div>
+                            <div class="latency-item">
+                                <span>LLM Output Stream:</span>
+                                <span class="latency-value" id="latency-llm">0 ms</span>
+                            </div>
+                            <div class="latency-divider"></div>
+                            <div class="latency-item total">
+                                <span>Total Process Time:</span>
+                                <span class="latency-value" id="latency-total">0 ms</span>
+                            </div>
+                        </div>
+
+                        <!-- Validation details -->
+                        <div class="validation-status-box">
+                            <h3>Pydantic Schema Validation</h3>
+                            <div class="val-line">
+                                <span>Schema Success:</span>
+                                <span id="val-schema-status" class="val-tag success">UNTESTED</span>
+                            </div>
+                            <div class="val-errors-wrapper">
+                                <span>JSON Error Log:</span>
+                                <pre id="val-errors-log">No errors recorded.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Hidden audio element for TTS -->
+    <audio id="tts-audio" style="display: none;"></audio>
+
+    <!-- Animated Loading Experience Overlay -->
+    <div class="loading-overlay" id="loading-screen" style="display: none;">
+        <div class="loading-box glass-card">
+            <div class="scanner-glow"></div>
+            
+            <svg class="loading-mascot-svg" viewBox="0 0 200 200">
+                <rect x="65" y="90" width="70" height="50" rx="20" fill="#1e1b4b" stroke="#a855f7" stroke-width="2"></rect>
+                <rect x="75" y="98" width="50" height="34" rx="10" fill="#0f172a" stroke="#a855f7" stroke-width="1.5"></rect>
+                <circle cx="90" cy="115" r="5" fill="#a855f7" class="loading-eye"></circle>
+                <circle cx="110" cy="115" r="5" fill="#a855f7" class="loading-eye"></circle>
+                <path d="M94 123 Q100 125 106 123" stroke="#a855f7" stroke-width="2" fill="none"></path>
+                <!-- Scanner Line -->
+                <line x1="70" y1="100" x2="130" y2="100" stroke="#10b981" stroke-width="2" class="scanner-bar"></line>
+            </svg>
+
+            <h2>Analyzing Multimodal Assets...</h2>
+            
+            <ul class="progress-stages-list">
+                <li id="stage-0" class="stage-pending"><i class="fa-solid fa-eye stage-icon"></i> Watching your video...</li>
+                <li id="stage-1" class="stage-pending"><i class="fa-solid fa-microphone stage-icon"></i> Listening to your audio...</li>
+                <li id="stage-2" class="stage-pending"><i class="fa-solid fa-anchor stage-icon"></i> Finding your strongest hook...</li>
+                <li id="stage-3" class="stage-pending"><i class="fa-solid fa-signature stage-icon"></i> Writing your content plan...</li>
+                <li id="stage-4" class="stage-pending"><i class="fa-solid fa-music stage-icon"></i> Matching the perfect vibe...</li>
+                <li id="stage-5" class="stage-pending"><i class="fa-solid fa-wand-magic-sparkles stage-icon"></i> Almost done...</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
