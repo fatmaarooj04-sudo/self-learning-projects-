@@ -336,8 +336,6 @@ async def analyze_video(
             os.remove(thumbnail_temp_path)
     except:
         pass
-    
-    # Cleanup temp local video
     if os.path.exists(video_temp_path):
         os.remove(video_temp_path)
 
@@ -359,8 +357,7 @@ async def analyze_video(
     }
     
     return JSONResponse(content=response_payload)
-
-# Pydantic schemas for Chat
+    
 class ChatRequest(BaseModel):
     message: str
     session_id: str
