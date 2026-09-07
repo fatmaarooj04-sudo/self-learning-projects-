@@ -1,4 +1,4 @@
-"""
+
 SupportOps Copilot — iOS 26 "Liquid Glass" styled Streamlit app.
 
 Flow:
