@@ -103,13 +103,7 @@ def extract_keyframes_cv2(video_path: str, session_id: str) -> List[str]:
     if not cap.isOpened():
         raise HTTPException(status_code=400, detail="Could not open video file.")
     
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    if total_frames <= 0:
-        cap.release()
-        raise HTTPException(status_code=400, detail="Invalid video frame count.")
-        
-    session_keyframes_dir = os.path.join(KEYFRAMES_DIR, session_id)
-    os.makedirs(session_keyframes_dir, exist_ok=True)
+
     
     # Calculate indexes for 5 keyframes (at 10%, 30%, 50%, 70%, 90% mark)
     frame_indices = [
