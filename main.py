@@ -36,17 +36,7 @@ TEMP_DIR = os.path.join(BASE_DIR, "temp")
 for d in [STATIC_DIR, KEYFRAMES_DIR, TTS_DIR, TEMP_DIR]:
     os.makedirs(d, exist_ok=True)
 
-# Pydantic Schemas for Structured Output
-class VisualQuality(BaseModel):
-    lighting: str = Field(description="Analysis of lighting quality (e.g. highlights, shadows, exposure)")
-    composition: str = Field(description="Analysis of composition, rule of thirds, symmetry, angles")
-    framing: str = Field(description="Camera framing (e.g. close-up, medium shot, head room)")
-    background: str = Field(description="Background distractions, noise, elements to remove")
-    text_readability: str = Field(description="Analysis of readability of on-screen captions or text overlays")
-    face_visibility: str = Field(description="Analysis of face visibility, expression clarity, eye contact")
-    dominant_colors: List[str] = Field(description="List of 3 dominant color hex codes (e.g. '#FF0000')")
-    contrast_brightness: str = Field(description="Description of contrast levels and overall brightness")
-    visual_aesthetics_score: int = Field(description="Aesthetics quality score from 0 to 100", ge=0, le=100)
+
 
 class ContentMetrics(BaseModel):
     hook_strength: int = Field(description="Score from 0 to 100", ge=0, le=100)
