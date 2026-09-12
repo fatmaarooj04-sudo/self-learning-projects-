@@ -1,21 +1,6 @@
 
-SupportOps Copilot — iOS 26 "Liquid Glass" styled Streamlit app.
 
-Flow:
-  Opening screen  -> Sign Up / Log In
-  Sign Up         -> stores user in users.csv -> auto redirect to Sign In
-  Sign In         -> validates against users.csv -> Dashboard
-  Dashboard       -> sidebar (glass, sliding/collapsible) with:
-                     - Welcome header
-                     - Analyze Ticket   (single ticket -> JSON, like original)
-                     - Quick Fill       (circular sample buttons)
-                     - History / Logs   (every ticket ever analyzed, in every view)
-                     - Batch Summary    (CSV upload -> metrics + table + JSON)
-                     - Comparison Table (category x priority crosstab)
-                     - Sign Out         (bottom of sidebar)
 
-Run with:  streamlit run app.py
-"""
 
 import hashlib
 import json
